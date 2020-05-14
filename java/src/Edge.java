@@ -1,9 +1,9 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Edge<E extends Comparable<E>> {
+public class Edge<T extends Comparable<T>, E extends Comparable<E>> implements Comparable<E>{
 
-    private List<Node> nodes;
+    private List<Node<T, E>> nodes;
     private E e;
 
     public Edge(E e)
@@ -12,11 +12,11 @@ public class Edge<E extends Comparable<E>> {
         nodes = new ArrayList<>();
     }
 
-    public List<Node> getNodes() {
+    public List<Node<T, E>> getNodes() {
         return nodes;
     }
 
-    public void setNodes(List<Node> nodes) {
+    public void setNodes(List<Node<T, E>> nodes) {
         this.nodes = nodes;
     }
 
@@ -26,5 +26,10 @@ public class Edge<E extends Comparable<E>> {
 
     public void setE(E e) {
         this.e = e;
+    }
+
+    @Override
+    public int compareTo(E o) {
+        return e.compareTo(o);
     }
 }
