@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -O3 -Wall
 
-all : rpn test
+all : rpn test rpnreals
 
 test : pila.c test_pila.c
 	$(CC) $(CFLAGS) pila.c test_pila.c -o test

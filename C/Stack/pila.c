@@ -5,7 +5,7 @@
 #include "pila.h"
 
 // Inicialitzem la pila amb 10 elements
-Pila* Crear(int size)
+Pila* CrearPila(int size)
 {
     Pila *pila = malloc(sizeof(Pila));
     if (pila == NULL)
@@ -29,7 +29,7 @@ Pila* Crear(int size)
 // Obtenim l'element del cim amb la formula element = ref inicial + numElements * mideDeCadaElement
 int Cim(Pila p)
 {
-    if (EsBuida(p))
+    if (EsBuidaPila(p))
     {
         fprintf(stderr, "La pila está buida i se li ha demanat el cim\n");
         exit(ERROR_PILA_BUIDA);  // Abortem el programa
@@ -45,7 +45,7 @@ void Apilar(Pila *ap, int elem)
         fprintf(stderr, "S\'ha intentat apilar un element a una pila inexistent\n");
         exit(ERROR_PILA_INEXISTENT);  // Abortem el programa
     }
-    if (EsPlena(*ap))
+    if (EsPlenaPila(*ap))
     {
         fprintf(stderr, "La pila está plena\n");
         exit(ERROR_PILA_PLENA);  // Abortem el programa
@@ -62,7 +62,7 @@ void Desapilar(Pila *ap)
         fprintf(stderr, "S\'ha intentat desapilar un element d\'una pila inexistent\n");
         exit(ERROR_PILA_INEXISTENT);  // Abortem el programa
     }
-    if (EsBuida(*ap))
+    if (EsBuidaPila(*ap))
     {
         fprintf(stderr, "La pila está buida\n");
         exit(ERROR_PILA_BUIDA);  // Abortem el programa
@@ -71,19 +71,19 @@ void Desapilar(Pila *ap)
 }
 
 // Comprovem si la pila esta buida i retornem cert si es aixi
-bool EsBuida(Pila p)
+bool EsBuidaPila(Pila p)
 {
     return (p.num_elems == 0);
 }
 
 // Comprovem que la pila esta plena i retornem cert si es aixi
-bool EsPlena(Pila p)
+bool EsPlenaPila(Pila p)
 {
     return (p.num_elems == p.capacitat);
 }
 
 // Alliberem la memoria ocupada per la pila
-void Destruir(Pila *ap)
+void DestruirPila(Pila *ap)
 {
     if (ap == NULL)
     {

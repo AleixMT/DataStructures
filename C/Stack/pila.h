@@ -37,12 +37,12 @@ typedef struct Pila {
 
 
 // Headers
-extern Pila* Crear(int size);
+extern Pila* CrearPila(int size);
 extern int Cim(Pila p);
 extern void Apilar(Pila *ap, int elem);
 extern void Desapilar(Pila *ap);
-extern bool EsBuida(Pila p);
-extern bool EsPlena(Pila p);
-extern void Destruir(Pila *ap);
+extern bool EsBuidaPila(Pila p);
+extern bool EsPlenaPila(Pila p);
+extern void DestruirPila(Pila *ap);
 
 #endif //LINEALDATASTRUCTURES_PILA_H

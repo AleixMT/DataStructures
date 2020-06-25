@@ -41,7 +41,7 @@ int reconstruir_nombre(Pila pila, bool negatiu)
 {
     int num = 0;  // Acumulador on tindrem el nombre
     int pos_digit = 0;  // Indica la posicio del digit sent 0 per les unitats
-    while (!EsBuida(pila))
+    while (!EsBuidaPila(pila))
     {
         // Obtenim el digit actual i el multipliquem per la potencia de 10 que correspon
         num += Cim(pila) * potencia_deu(pos_digit);
@@ -54,8 +54,8 @@ int reconstruir_nombre(Pila pila, bool negatiu)
 
 int main(int nargs, char* args[])
 {
-    Pila* pila = Crear(10);
-    Pila* pila_auxiliar = Crear(10);
+    Pila* pila = CrearPila(10);
+    Pila* pila_auxiliar = CrearPila(10);
     FILE *fp;
     char ch;
     bool flag_lectura_nombre = false;
@@ -96,7 +96,7 @@ int main(int nargs, char* args[])
                     Apilar(pila, reconstruir_nombre(*pila_auxiliar, flag_negatiu));  // Apilem el numero reconstruit
 
                     flag_negatiu = false;  // baixem el flag
-                    pila_auxiliar = Crear(10);  // Regenerem la pila
+                    pila_auxiliar = CrearPila(10);  // Regenerem la pila
 
                 }
                 else if (!flag_lectura_nombre && flag_negatiu)  // Es tracta d'una operacio de resta, no d'un negatiu
@@ -234,7 +234,7 @@ int main(int nargs, char* args[])
             }
             else if (ch == '!')  // factorial
             {
-                if (EsBuida(*pila))
+                if (EsBuidaPila(*pila))
                 {
                     fprintf(stderr, "Error al factorial: Insuficients operands (pila buida)\n");
                     exit(ERROR_INSUFICIENTS_OPERANDS);  // Abortem el programa
@@ -303,7 +303,7 @@ int main(int nargs, char* args[])
                 else if (ch == 's' && flag_canvisigne == 2)
                 {
                     // Si estem aqui vol dir que hem de llegit un operand de canvi de signe
-                    if (EsBuida(*pila))
+                    if (EsBuidaPila(*pila))
                     {
                         fprintf(stderr, "Error al canvi de signe: Insuficients operands (pila buida)\n");
                         exit(ERROR_INSUFICIENTS_OPERANDS);  // Abortem el programa
@@ -350,8 +350,8 @@ int main(int nargs, char* args[])
         }
 
         printf("Resultat final de la pila es: %d\n", Cim(*pila));
-        Destruir(pila_auxiliar);
-        Destruir(pila);
+        DestruirPila(pila_auxiliar);
+        DestruirPila(pila);
         exit(EXIT);
     }
 }
