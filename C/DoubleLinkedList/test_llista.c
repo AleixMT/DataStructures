@@ -3,7 +3,7 @@
 //
 
 #include "llista.h"
-#include "random.h"
+#include "../includes/random.h"
 
 int main(int nargs, char* args[])
 {
