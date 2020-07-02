@@ -2,7 +2,7 @@
 // Created by Sergi Vives on 15/4/20.
 //
 
-#include "llista.h"
+#include "DoubleLinkedList.h"
 #include "../includes/random.h"
 
 int main(int nargs, char* args[])

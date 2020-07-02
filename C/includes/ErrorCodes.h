@@ -1,17 +1,9 @@
-//
-// Created by Sergi Vives on 21/5/2020.
-//
-
-#ifndef ORDENACIOCERCACOST_ERRORCODES_H
-#define ORDENACIOCERCACOST_ERRORCODES_H
-
-// Errorcodes de les EDs
-#define EXIT 0
+// Error codes for a generic data structure
+#define SUCCESS 0
 #define ERROR_CREATE 1
 #define ERROR_DESTROY 2
 #define ERROR_NONEXISTENT_DATA_STRUCTURE 3
 #define ERROR_EMPTY_DATA_STRUCTURE 4
 #define ERROR_FULL_DATA_STRUCTURE 5
-#define ERROR_BAD_PARAMETERS 6
-
-#endif //ORDENACIOCERCACOST_ERRORCODES_H
+#define ERROR_OUT_OF_BOUNDS 6
+#define ERROR_BAD_PARAMETERS 7

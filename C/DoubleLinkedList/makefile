@@ -1,14 +1,17 @@
 CC = gcc
 CFLAGS = -O3 -Wall
 
-all : listtest
+all : manager
 
-listtest : ../includes/random.c llista.c test_llista.c
-	$(CC) $(CFLAGS) ../includes/random.c llista.c test_llista.c -o listtest -lm
+test : ../includes/random.c DoubleLinkedList.c DoubleLinkedList_test.c
+	$(CC) $(CFLAGS) ../includes/random.c DoubleLinkedList.c DoubleLinkedList_test.c -o test -lm
 
-runlisttest : listtest
-	./listtest
+manager : DoubleLinkedList.c StudentManager.c
+	$(CC) $(CFLAGS) DoubleLinkedList.c StudentManager.c -o manager -lm
+
+run : manager
+	./manager
 
 .PHONY : clean
 clean :
-	rm -f listtest skiplisttest
+	rm -f test manager
