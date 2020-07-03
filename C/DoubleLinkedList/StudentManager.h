@@ -2,6 +2,7 @@
 #define C_STUDENTMANAGER_H
 
 #include "DoubleLinkedList.h"
+#include <string.h>
 
 typedef struct Date{
     unsigned int day;
@@ -11,12 +12,17 @@ typedef struct Date{
 
 typedef struct Student{
     char name[100];
-    char correu[100];
+    char email[100];
     char DNI_letter;
     unsigned int DNI;
-    DoubleLinkedList notes;
+    DoubleLinkedList marks;
     Date date;
     bool sex;  // 1 for males, 0 for females
 }Student;
+
+typedef struct Manager{
+    DoubleLinkedList list;
+    Student lastStudent;
+}Manager;
 
 #endif //C_STUDENTMANAGER_H

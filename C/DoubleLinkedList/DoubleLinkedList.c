@@ -91,6 +91,8 @@ void destroy(DoubleLinkedList* list)
  * not be inserted in the first position of the list. As such, if the interest point points to NULL,
  * the new element will be added on the first position.
  *
+ * Even though a pointer to the data is received, no aliasing is produced since we raw_copy the data received.
+ *
  * Aborts program if the list does not exist.
  * @param list
  * @param element
@@ -352,16 +354,55 @@ bool isEnd(DoubleLinkedList list)
     }
 }
 
-void** find(DoubleLinkedList list, void (*f)(void *), void *element, unsigned int *num_elements_found)
+
+/**
+ * Finds all matching elements in the double linked list using the comparison function parameter with the generic parameter
+ * void *element and returns it using the array void ***found parameter. Also fills the variable num_elements_found with
+ * the number of matching elements.
+ *
+ * Returns true if any match occurs, false otherwise.
+ * Also note that ***found points to NULL if no elements are found.
+ * @param list
+ * @param f
+ * @param element
+ * @param found
+ * @param num_elements_found
+ * @return
+ */
+bool find(DoubleLinkedList list, int (*f)(void *, void *), void *element, void ***found, unsigned int *num_elements_found)
 {
-    Node * ptr = NULL;
-    ptr = list.head;
-   // void* found_elements[];
+    Node *ptr = list.head;
+    *num_elements_found = 0;
+    bool result = false;
+
+    // Count all matching elements in the list
     while (ptr != NULL)
     {
+        if (f(element, ptr->data) == 0)
+        {
+            result = true;
+            (*num_elements_found)++;
+        }
         ptr = ptr->next;
     }
-    return NULL;
+
+    // Allocate an array of pointers to the generic type void *
+    (*found) = malloc(sizeof(void *) * (*num_elements_found));
+
+    // Loop another time to append matching elements (two identical loops to optimize memory)
+    unsigned int i = 0;
+    ptr = list.head;
+    while (ptr != NULL)
+    {
+        if (f(element, ptr->data) == 0)
+        {
+            (*found)[i] = malloc(list.data_size);  // Allocate a generic element
+            raw_copy((char *) ptr->data, (char *) (*found)[i], list.data_size);  // Copy to the found list
+            i++;
+        }
+        ptr = ptr->next;
+    }
+    return result;
 }
 
 

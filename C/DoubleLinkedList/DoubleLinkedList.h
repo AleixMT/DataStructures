@@ -32,7 +32,7 @@ void pointNext(DoubleLinkedList *doubleLinkedList);
 void pointPrevious(DoubleLinkedList *doubleLinkedList);
 void toScreen(DoubleLinkedList doubleLinkedList, void (*pointer_to_printer_function)(void *));
 bool isEnd(DoubleLinkedList doubleLinkedList);
-void** find(DoubleLinkedList doubleLinkedList, void (*pointer_to_comparator_function)(void *), void *element, unsigned int *num_elements_found);
+bool find(DoubleLinkedList doubleLinkedList, int (*pointer_to_comparator_function)(void *, void *), void *element, void ***found, unsigned int *num_elements_found);
 
 /*
 int Esborrar(Llista_encadenada *ll);
