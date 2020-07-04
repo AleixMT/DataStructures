@@ -31,6 +31,28 @@ void toScreen(DoubleLinkedList list, void (*f)(void *))
     }
 }
 
+/**
+ * Prints the content of the list backwards if true is specified using a function received by parameter
+ * @param list
+ * @param f
+ */
+void toScreenBackwards(DoubleLinkedList list, void (*f)(void *), bool backwards)
+{
+    if (backwards)
+    {
+        Node *node = list.tail;
+        while (node != NULL)
+        {
+            (*f)(node->data);
+            node = node->previous;
+        }
+    }
+    else
+    {
+        toScreen(list, f);
+    }
+}
+
 
 /** MAIN PUBLIC FUNCTIONS **/
 
@@ -162,6 +184,116 @@ void add(DoubleLinkedList *list, void *element)
             }
         }
         list->size = list->size + 1;
+    }
+
+}
+
+
+/**
+ * Adds an element using an order determined by the function parameter and returns true only if element is not present.
+ * It does not add anything to the list and returns false otherwise.
+ *
+ * Even though a pointer to the data is received, no aliasing is produced since we raw_copy the data received.
+ *
+ * Aborts program if the list does not exist.
+ * @param list
+ * @param element
+ * @param f
+ * @return
+ */
+bool sortedAdd(DoubleLinkedList *list, void *element, int (*f)(void *, void *))
+{
+    if (list == NULL)
+    {
+        fprintf(stderr, "ERROR: Could not insert into the double linked list because it does not exist. Aborting... \n");
+        exit(ERROR_NONEXISTENT_DATA_STRUCTURE);
+        return false;
+    }
+    else
+    {
+        if (list->size != 0)  // if list not empty
+        {
+            Node *ptr = list->head;
+            int comparationResult = f(ptr->data, element);
+            if (comparationResult == 0)  // If student present abort
+            {
+                return false;
+            }
+            else if (comparationResult > 0)  // Element bigger than the current. Keep iterating
+            {
+                ptr = ptr->next;
+            }
+            else  // Element smaller. Insert before
+            {
+                // Insert a node as the head of the list
+                Node* node = (Node*) malloc(sizeof(Node));
+                list->head->previous = node;
+                node->next = list->head;
+                node->previous = NULL;
+                list->head = node;
+
+                node->data = malloc(list->data_size);
+                raw_copy((char *)(element), (char *)(node->data), list->data_size);
+
+                list->size = list->size + 1;
+                return true;
+            }
+            // Iterate over all elements - 1 in the double linked list
+            for (unsigned int i = 0; i < list->size - 1; i++)
+            {
+                int comparationResult = f(ptr->data, element);
+                if (comparationResult == 0)  // If student present abort
+                {
+                    return false;
+                }
+                else if (comparationResult > 0)  // Element bigger than the current. Keep iterating
+                {
+                    ptr = ptr->next;
+                }
+                else  // Insert between elements
+                {
+                    // Insert the new element in between the interest point and its next element
+                    Node* node = (Node*) malloc(sizeof(Node));
+                    node->next = ptr;
+                    node->previous = ptr->previous;
+                    ptr->previous->next = node;
+                    ptr->previous = node;
+
+                    node->data = malloc(list->data_size);
+                    raw_copy((char *)(element), (char *)(node->data), list->data_size);
+
+                    list->size = list->size + 1;
+                    return true;
+                }
+            }
+            // If we reach this part of the code element is biggest that all elements in the list and goes to the tail
+            Node* node = (Node*) malloc(sizeof(Node));
+            node->next = NULL;
+            node->previous = list->tail;
+            list->tail->next = node;
+            list->tail = node;
+
+            node->data = malloc(list->data_size);
+            raw_copy((char *)(element), (char *)(node->data), list->data_size);
+
+            list->size = list->size + 1;
+            return true;
+        }
+        else  // List is empty, we add first (and last) element
+        {
+            // Insert the only node in the list
+            Node* node = (Node*) malloc(sizeof(Node));
+            node->next = NULL;
+            node->previous = NULL;
+            list->head = node;
+            list->tail = node;
+
+            node->data = malloc(list->data_size);
+            raw_copy((char *)(element), (char *)(node->data), list->data_size);
+
+            list->size = list->size + 1;
+            return true;
+        }
     }
 
 }

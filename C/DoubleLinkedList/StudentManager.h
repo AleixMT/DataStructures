@@ -4,11 +4,6 @@
 #include "DoubleLinkedList.h"
 #include <string.h>
 
-typedef struct Date{
-    unsigned int day;
-    unsigned int month;
-    unsigned int year;
-}Date;
 
 typedef struct Student{
     char name[100];
@@ -16,13 +11,15 @@ typedef struct Student{
     char DNI_letter;
     unsigned int DNI;
     DoubleLinkedList marks;
-    Date date;
     bool sex;  // 1 for males, 0 for females
 }Student;
 
 typedef struct Manager{
-    DoubleLinkedList list;
+    DoubleLinkedList *list;
     Student lastStudent;
 }Manager;
+
+const char DNI_letters[] = {'T', 'R', 'W', 'A', 'G', 'M', 'Y', 'F', 'P', 'D', 'X', 'B', 'N', 'J', 'Z', 'S', 'Q', 'V', 'H', 'L', 'C', 'K', 'E'};
+
 
 #endif //C_STUDENTMANAGER_H
