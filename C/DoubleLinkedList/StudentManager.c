@@ -239,6 +239,8 @@ int main(int nargs, char* args[])
     Student temp_student;
     temp_student.marks = *create(sizeof(double));
 
+    char endline;  // Temporary storage of endline character to validate user input
+
     // Guardar fitxer i sortir
     FILE *file_pointer;
     file_pointer = fopen(".student_manager.dat", "r");
@@ -246,31 +248,32 @@ int main(int nargs, char* args[])
     {
         printf("\nADVERTENCIA: No s'ha pogut obrir el fitxer");
     }
-
-    while (true)
+    else
     {
         int sex;
-        // Fill the array with elements until MAX_ELEMENTS is reached or EOF is reached
-        if (fscanf(file_pointer, "%u-%c %s %s %d ", &temp_student.DNI, &temp_student.DNI_letter,
-               temp_student.name, temp_student.email, &sex) == EOF)
-            break;
-        double mark;
-        while (fscanf(file_pointer, "%lf ", &mark) == 1)
+        char trash;
+        while (fscanf(file_pointer, "%u%c%c%s%s%d", &temp_student.DNI, &trash, &temp_student.DNI_letter, temp_student.name, temp_student.email, &sex) != EOF)
         {
-            sortedAdd(&temp_student.marks, &mark, compareToDoubles);
+            double mark;
+            fscanf(file_pointer, "%c", &endline);
+            if (endline == '\n')
+                break;
+            while (fscanf(file_pointer, "%lf", &mark) == 1)
+            {
+                fscanf(file_pointer, "%c", &endline);
+                if (endline == '\n')  // End of line
+                    break;
+
+                sortedAdd(&temp_student.marks, &mark, compareToDoubles);
+            }
+            addStudent(manager.list, temp_student.name, temp_student.email, temp_student.DNI_letter, temp_student.DNI, temp_student.marks, sex != 0);
         }
-        if (fscanf(file_pointer, "\n") == EOF)
-        {
-            break;
-        }
-        addStudent(manager.list, temp_student.name, temp_student.email, temp_student.DNI_letter, temp_student.DNI, temp_student.marks, sex != 0);
+        fclose(file_pointer);
+
     }
 
 
-    fclose(file_pointer);
-
     unsigned int option;  // Temporary storage of the option selected by user
-    char endline;  // Temporary storage of endline character to validate user input
     do {
         printf("\n\n");
         printf("****************************\n");
@@ -453,7 +456,7 @@ int main(int nargs, char* args[])
                 }
                 case 5:
                 {
-                    // Eliminar
+                    delete(manager.list, compareToStudentDNI, &manager.lastStudent);
                     break;
                 }
                 case 6:
@@ -489,11 +492,11 @@ int main(int nargs, char* args[])
                     Node * ptr = manager.list->head;
                     while (ptr != NULL)
                     {
-                        fprintf(file_pointer, "%u-%c %s %s %d ", ((Student *)(ptr->data))->DNI, ((Student *)(ptr->data))->DNI_letter, ((Student *)(ptr->data))->name, ((Student *)(ptr->data))->email, ((Student *)(ptr->data))->sex);
+                        fprintf(file_pointer, "%u %c %s %s %d", ((Student *)(ptr->data))->DNI, ((Student *)(ptr->data))->DNI_letter, ((Student *)(ptr->data))->name, ((Student *)(ptr->data))->email, ((Student *)(ptr->data))->sex);
                         Node * ptr2 = ((Student *)(ptr->data))->marks.head;
                         while (ptr2 != NULL)
                         {
-                            fprintf(file_pointer, "%lf1 ", *((double *)ptr2->data));
+                            fprintf(file_pointer, " %lf", *((double *)ptr2->data));
                             ptr2 = ptr2->next;
                         }
                         fprintf(file_pointer, "\n");

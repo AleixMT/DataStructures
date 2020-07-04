@@ -26,6 +26,8 @@ void destroy(DoubleLinkedList *doubleLinkedList);
 void add(DoubleLinkedList *doubleLinkedList, void *element);
 bool sortedAdd(DoubleLinkedList *doubleLinkedList, void *element, int (*f)(void *, void *));
 void* get(DoubleLinkedList doubleLinkedList);
+void* pop(DoubleLinkedList *doubleLinkedList);
+unsigned int delete(DoubleLinkedList *doubleLinkedList, int (*pointer_to_comparator_function)(void *, void *), void *element);
 unsigned int size(DoubleLinkedList doubleLinkedList);
 void pointHead(DoubleLinkedList *doubleLinkedList);
 void pointTail(DoubleLinkedList *doubleLinkedList);
@@ -36,6 +38,3 @@ void toScreenBackwards(DoubleLinkedList doubleLinkedList, void (*pointer_to_prin
 bool isEnd(DoubleLinkedList doubleLinkedList);
 bool find(DoubleLinkedList doubleLinkedList, int (*pointer_to_comparator_function)(void *, void *), void *element, void ***found, unsigned int *num_elements_found);
 
-/*
-int Esborrar(Llista_encadenada *ll);
-*/

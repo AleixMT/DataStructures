@@ -324,6 +324,96 @@ void* get(DoubleLinkedList list)
     }
 }
 
+/**
+ * Returns by value the element pointed by the interest point. The interest point will always point to the next element after
+ * popping an element except when the interest point is the last element, then the interest point will point to the new tail.
+ * @param list
+ * @return
+ */
+void* pop(DoubleLinkedList *list)
+{
+    if (list == NULL)
+    {
+        fprintf(stderr, "ERROR: Could not pop the current element because the double linked list does not exist\n");
+        exit(ERROR_NONEXISTENT_DATA_STRUCTURE);
+    }
+    else
+    {
+        if (list->interest_point == NULL)  // Interest point points to the ghost element outside of the list
+        {
+            fprintf(stderr, "ERROR: Could not pop the current element because the interest point is pointing outside of the list\n");
+            exit(ERROR_OUT_OF_BOUNDS);
+        }
+        else  // Interest point points an element
+        {
+            void * result = malloc(list->data_size);
+            raw_copy(list->interest_point->data, result, list->data_size);
+
+            if (list->interest_point->next == NULL && list->interest_point->previous == NULL)  // Last element of the list
+            {
+                free(list->interest_point);
+                list->interest_point = NULL;
+                list->tail = NULL;
+                list->head = NULL;
+            }
+            else if (list->interest_point->next == NULL)  // End of the list
+            {
+                list->interest_point->previous->next = NULL;
+                list->tail = list->interest_point->previous;
+                free(list->interest_point);
+                list->interest_point = list->tail;
+            }
+            else if (list->interest_point->previous == NULL)  // Start of the list
+            {
+                list->interest_point->next->previous = NULL;
+                list->head = list->interest_point->next;
+                free(list->interest_point);
+                list->interest_point = list->head;
+            }
+            else  // In between the list
+            {
+                list->interest_point->previous->next = list->interest_point->next;
+                list->interest_point->next->previous = list->interest_point->previous;
+                Node * n = list->interest_point->next;
+                free(list->interest_point);
+                list->interest_point = n;
+            }
+            list->size = list->size - 1;
+            return result;
+        }
+    }
+}
+
+
+/**
+ * Deletes all matching elements using pointer to function f as a comparator between generic types. Returns de number
+ * of deleted elements.
+ * @param list
+ * @param f
+ * @param element
+ * @return
+ */
+unsigned int delete(DoubleLinkedList *list, int (*f)(void *, void *), void *element)
+{
+    Node *ptr = list->head, *tmp;
+    unsigned int num_elements_found = 0;
+
+    // Count all matching elements in the list
+    while (ptr != NULL)
+    {
+        if (f(element, ptr->data) == 0)
+        {
+            tmp = list->interest_point;
+            list->interest_point = ptr;
+            pop(list);  // Reuse pop function
+            list->interest_point = tmp;
+            num_elements_found++;
+        }
+        ptr = ptr->next;
+    }
+    return num_elements_found;
+}
+
 
 /**
  * Returns the number of elements in the list
@@ -537,80 +627,6 @@ bool find(DoubleLinkedList list, int (*f)(void *, void *), void *element, void *
     return result;
 }
 
-
-/*
-int Esborrar(Llista_encadenada *ll)
-{
-    if (ll == NULL)
-    {
-        fprintf(stderr, "ERROR: No s'ha pogut esborrar perque la llista no existeix\n");
-        return ERROR_LLISTA_INEXISTENT;  // Abortem la resta de la funció
-    }
-    else
-    {
-        if (ll->PDI == NULL)  // aqui el PDI apunta al "cim" de la llista
-        {
-            // Si apuntem a null no podem borrar res
-            fprintf(stderr, "ERROR: No s'ha pogut esborrar element actual, estem al principi (fora) de la llista\n");
-            return ERROR_PRINCIPI_DE_LLISTA;
-        }
-        else  // El PDI apunta a algun element
-        {
-            // El seguent bloc es tot else if per a que siguin mutuament exclusiu!
-            // Ordre important!
-            if (ll->PDI->next == NULL && ll->PDI->previous == NULL)  // Ultim element de la llista
-            {
-                // Alliberem memory
-                free(ll->PDI);
-                // Ressetegem a estat inicial
-                ll->PDI = NULL;
-                ll->tail = NULL;
-                ll->head = NULL;
-                // I els num elems es fa automaticament
-            }
-            else if (ll->PDI->next == NULL)  // Estem al final de la llista
-            {
-                // Posem que el nou últim node apunti a null
-                ll->PDI->previous->next = NULL;
-                // Actualitzem el node contigu com lultim node
-                ll->tail = ll->PDI->previous;
-                // Alliberem memory
-                free(ll->PDI);
-                // Fem que el PDI apunti al tail
-                ll->PDI = ll->tail;
-            }
-            else if (ll->PDI->previous == NULL)  // Estem al principi de la llista
-            {
-                // Posem que el nou primer node apunti a null
-                ll->PDI->next->previous = NULL;
-                // Actualitzem el node contigu com primer node node
-                ll->head = ll->PDI->next;
-                // Alliberem memory
-                free(ll->PDI);
-                // Fem que el PDI es mogui automaticament al primer node
-                ll->PDI = ll->head;
-            }
-            else  // Estem a un node intermig dins de la llista
-            {
-                // Agafem node seguent del que volem borrar i fem que el punter seguent del node previ al que volem borrar apunti aa aquest
-                ll->PDI->previous->next = ll->PDI->next;
-                // Agafem node previ al que volem borrar i fem que el punter previ del node seguent al que volem vborrar apunti a aquest
-                ll->PDI->next->previous = ll->PDI->previous;
-                // Guardem una ref per poder lliberar memory i redcuperar una adreça contigua pel PDI
-                // De forma arbitraria escollim els seguent node
-                Node * n = ll->PDI->next;
-                // Alliberem memory
-                free(ll->PDI);
-                // recuperem adreça
-                ll->PDI = n;
-            }
-            // i apuntem -1 element
-            ll->num_elems = ll->num_elems - 1;  // Ho escric aixi per si hi ha trouble amb decrementacio de punters
-            return EXIT;  // Si la llista no es inexistent sempre podrem esborrar
-        }
-    }
-}
-*/
 
 
 
