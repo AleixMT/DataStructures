@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdbool.h>  // To use booleans
 #include <stdlib.h>
-#include "../includes/ErrorCodes.h"  // Symbolic definition of error codes
+#include "ErrorCodes.h"  // Symbolic definition of error codes
 
 // Type definition for a generic element of the list
 typedef struct Node {

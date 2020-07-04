@@ -240,10 +240,6 @@ void addValues(ArrayList *arrayList, unsigned int elements[], unsigned int num_e
 }
 
 
-/*
- * PROJECT SPECIFIC FUNCTIONS
- */
-
 /**
  * Printf to standard output the array contained inside of the arrayList
  * @param arrayList
@@ -273,54 +269,6 @@ void toString(ArrayList arrayList)
     printf("\n");
 }
 
-/*
-/**
- * Converts the data structure to a string that contains at least the first and last 100 elements.
- * @param arrayList ArrayList
- **/ /*
-char* toString(ArrayList arrayList)
-{
-    char *msg = NULL;
-    int offset = 0;
-
-    msg = (char *) malloc(sizeof(char) * arrayList.num_elements * (10 + 1) + 1 + 1);
-    for (int i = 0; i < arrayList.num_elements; i++)
-    {
-        printf("%i\n", offset);
-        offset += sprintf(&(msg[offset]), "%d ", arrayList.array[i]);
-    }
-    offset += sprintf(&(msg[offset]), "\n");
-
-    printf("Reservo pa %lu i consumo %i\n", sizeof(char) * arrayList.num_elements * (10 + 1) + 1, offset);
-
-    if (arrayList.num_elements <>=> 200)
-    {
-        /*
-         * At least 200 ints that converted to string fill at least 10 chars of space plus 1 space each.
-         * Plus 3 spaces for the separation line plus 3 endlines plus the endstring character.
-
-        msg = (char *) malloc(sizeof(char) * 200 * (1 + 10) + 6 + 1);
-        for (int i = 0; i < 200; i++)
-        {
-            offset += sprintf(&(msg[offset]), "%d ", arrayList.array[i]);
-        }
-        offset += sprintf(&(msg[offset]), "\n...\n");
-        for (int i = arrayList.num_elements - 100; i < arrayList.num_elements; i++)
-        {
-            offset += sprintf(&(msg[offset]), "%d ", arrayList.array[i]);
-        }
-    }
-    else
-    {
-        msg = (char *) malloc(sizeof(char) * arrayList.num_elements * 2 + 1);
-        for (int i = 0; i < arrayList.num_elements; i++)
-        {
-            offset += sprintf(&(msg[offset]), "%d ", arrayList.array[i]);
-        }
-
-    }
-    return msg;
-}*/
 
 /**
  * Populates the ArrayList with the number of elements passed by parameter.

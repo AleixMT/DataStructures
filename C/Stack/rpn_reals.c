@@ -1,7 +1,3 @@
-//
-// Created by Sergi Vives on 12/4/20.
-//
-
 #include "pila_reals.h"
 
 // He borrat algunes de les funcions que feien operacions matematiques ja que he decidit fer servir

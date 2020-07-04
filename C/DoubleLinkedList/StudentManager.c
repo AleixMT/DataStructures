@@ -12,6 +12,13 @@ void clean_stdin()
 }
 
 
+void copy(char *origin, char *destination, size_t data_size)
+{
+    for (int i = 0; i < data_size; i++)
+        *(char *)(destination + i) = *(char *)(origin + i);
+}
+
+
 char charToUpperCase(char character)
 {
     if (character >= 97  && character <= 122)
@@ -20,6 +27,7 @@ char charToUpperCase(char character)
     }
     return character;
 }
+
 
 char * toUpperCase(char * string, unsigned int size)
 {
@@ -51,11 +59,34 @@ void printUnsignedInt(void *n)
     printf("%u ", *(unsigned int *)n);
 }
 
+
+char * replaceSpaces(char * string, unsigned int num_chars)
+{
+    for (unsigned int i = 0; i < num_chars; i++)
+    {
+        if (string[i] == 32)
+            string[i] = 95;
+    }
+    return string;
+}
+
+char * replaceUnderscores(char * string, unsigned int num_chars)
+{
+    for (unsigned int i = 0; i < num_chars; i++)
+    {
+        if (string[i] == 95)
+            string[i] = 32;
+    }
+    return string;
+}
+
+
 // Function to print a student
 void printStudent(void *n)
 {
     printf("\n");
     Student student = *((Student *)(n));
+    replaceUnderscores(student.name, MAX_CHAR_IN_FIELDS);
     printf("Nom: %s DNI: %u-%c email: %s ", student.name, student.DNI, student.DNI_letter, student.email);
     if (student.sex) printf("sexe: Home");
     else printf("sexe: Dona");
@@ -76,7 +107,13 @@ int compareToStudentDNI(void *student1, void *student2)
 
 int compareToStudentName(void *student1, void *student2)
 {
-    return strncmp(toUpperCase(((Student *)(student1))->name, strlen(((Student *)(student1))->name)), toUpperCase(((Student *)(student2))->name, strlen(((Student *)(student2))->name)), strlen(((Student *)(student1))->name));
+    char tmp_name_1[MAX_CHAR_IN_FIELDS];
+    char tmp_name_2[MAX_CHAR_IN_FIELDS];
+
+    copy(((Student *)(student1))->name, tmp_name_1, sizeof(tmp_name_1));
+    copy(((Student *)(student2))->name, tmp_name_2, sizeof(tmp_name_2));
+
+    return strncmp(toUpperCase(tmp_name_1, strlen(tmp_name_1)), toUpperCase(tmp_name_2, strlen(tmp_name_2)), strlen(tmp_name_1));
 }
 
 int compareToIntegers(void *int1, void *int2)
@@ -147,101 +184,19 @@ bool isDNICorrect(unsigned int DNI, char letter)
     return DNI_letters[DNI % 23] == letter;
 }
 
+
 int main(int nargs, char* args[])
 {
-    /*
-    // test with unsigned ints
 
-    DoubleLinkedList *list = create(sizeof(unsigned int));
-    unsigned int *value = malloc(sizeof(unsigned int) * 4);
-    value[0] = 2;
-    value[1] = 12;
-    value[2] = 2;
-    value[3] = 3;
-    unsigned int num_values;
-    for (unsigned int i = 0; i < 4; i++)
-    {
-        add(list, &value[i]);
-    }
-    printf("Contingut inicial: \n");
-    toScreen(*list, printInt);
-
-    void **found;  // Array of pointers to void *
-    find(*list, compareToUnsignedIntegers, &value[0], &found, &num_values);
-
-    for (unsigned int i = 0; i < num_values; i++)
-    {
-        printUnsignedInt(found[i]);
-    }
-    printf("\n");
-
-    destroy(list);
-
-    // test with students
-
-    list = create(sizeof(Student));
-    Student *students = malloc(sizeof(Student) * 4);
-
-    strcpy(students[0].name, "Maria Jimenez");
-    strcpy(students[0].email, "maria.jimenez@urv.cat");
-    students[0].DNI = 25626333;
-    students[0].DNI_letter = 'c';
-    students[0].sex = false;
-    students[0].date.day = 2;
-    students[0].date.month = 2;
-    students[0].date.year = 2;
-
-    strcpy(students[1].name, "Viki la vikinga");
-    strcpy(students[1].email, "viki.romero@urv.cat");
-    students[1].DNI = 25456333;
-    students[1].DNI_letter = 'd';
-    students[1].sex = false;
-    students[1].date.day = 5;
-    students[1].date.month = 10;
-    students[1].date.year = 3;
-
-    strcpy(students[2].name, "Aleix Marine");
-    strcpy(students[2].email, "aleix.marine@estudiants.urv.cat");
-    students[2].DNI = 34567890;
-    students[2].DNI_letter = 'x';
-    students[2].sex = true;
-    students[2].date.day = 2;
-    students[2].date.month = 6;
-    students[2].date.year = 12;
-
-    strcpy(students[3].name, "Pedrito Legend");
-    strcpy(students[3].email, "fitnessfuerte@ponis.com");
-    students[3].DNI = 34467890;
-    students[3].DNI_letter = 'k';
-    students[3].sex = true;
-    students[3].date.day = 5;
-    students[3].date.month = 10;
-    students[3].date.year = 12;
-
-    for (unsigned int i = 0; i < 4; i++)
-    {
-        add(list, &students[i]);
-    }
-    printf("Contingut inicial: \n");
-    toScreen(*list, printStudent);
-
-    find(*list, compareToStudentDNI, &students[0], &found, &num_values);
-
-    printf("\n%u", num_values);
-    for (int i = 0; i < num_values; i++)
-    {
-        printStudent(found[i]);
-    }
-    destroy(list);
-     */
     Manager manager;
+    manager.lastStudent.DNI = 0;
     manager.list = create(sizeof(Student));
     Student temp_student;
     temp_student.marks = *create(sizeof(double));
 
     char endline;  // Temporary storage of endline character to validate user input
 
-    // Guardar fitxer i sortir
+    // File reader
     FILE *file_pointer;
     file_pointer = fopen(".student_manager.dat", "r");
     if (file_pointer == NULL)
@@ -255,13 +210,12 @@ int main(int nargs, char* args[])
         while (fscanf(file_pointer, "%u%c%c%s%s%d", &temp_student.DNI, &trash, &temp_student.DNI_letter, temp_student.name, temp_student.email, &sex) != EOF)
         {
             double mark;
-            fscanf(file_pointer, "%c", &endline);
+            if (fscanf(file_pointer, "%c", &endline) == 1);
             if (endline == '\n')
                 break;
             while (fscanf(file_pointer, "%lf", &mark) == 1)
             {
-                fscanf(file_pointer, "%c", &endline);
-                if (endline == '\n')  // End of line
+                if (fscanf(file_pointer, "%c", &endline) == 1 && endline == '\n')  // End of line
                     break;
 
                 sortedAdd(&temp_student.marks, &mark, compareToDoubles);
@@ -286,6 +240,7 @@ int main(int nargs, char* args[])
         printf("4.- Veure últim alumne buscat\n");
         printf("5.- Eliminar últim alumne buscat\n");
         printf("6.- Veure tots els alumnes\n");
+        printf("7.- Destruir llista\n");
         printf("0.- Sortir\n");
 
         printf("Introdueix nombre d'opció: ");
@@ -294,15 +249,29 @@ int main(int nargs, char* args[])
             switch (option) {
                 case 1:
                 {
+                    char name[MAX_CHAR_IN_FIELDS];
+
                     // check user input for name
                     printf("\n\nIntrodueix el nom de l'estudiant: ");
-                    char name[100];
-                    while (scanf("%s", name) != 1) {}
+
+                    if (fgets(name, MAX_CHAR_IN_FIELDS, stdin) == NULL)
+                    {
+                        printf("\n\nERROR: No sha pogut guardar el nom");
+                    }
+                    // Remove trailing newline, if there.
+                    if ((strlen(name) > 0) && (name[strlen(name) - 1] == '\n'))
+                        name[strlen (name) - 1] = '\0';
 
                     // check user input for email
                     printf("\n\nIntrodueix el email de l'estudiant: ");
                     char email[100];
-                    while (scanf("%s", email) != 1) {}
+                    if (fgets(email, MAX_CHAR_IN_FIELDS, stdin) == NULL)
+                    {
+                        printf("\n\nERROR: No sha pogut guardar el email");
+                    }
+                    // Remove trailing newline, if there.
+                    if ((strlen(email) > 0) && (email[strlen(email) - 1] == '\n'))
+                        email[strlen(email) - 1] = '\0';
 
                     // check user input for the DNI
                     bool correct_input_DNI = false;
@@ -324,7 +293,7 @@ int main(int nargs, char* args[])
                     while (!correct_input_DNI_letter)
                     {
                         printf("\n\nIntrodueix el la lletra del DNI l'estudiant a afegir: ");
-                        correct_input_DNI_letter = scanf("%c%c", &value_letter, &endline) == 2 && endline == '\n';  // Checks that the user did not input trash
+                        correct_input_DNI_letter = scanf("%c%c", &value_letter, &endline) == 2 && value_letter != '\n' && endline == '\n';  // Checks that the user did not input trash
                         if (!correct_input_DNI)
                         {
                             clean_stdin();
@@ -343,7 +312,7 @@ int main(int nargs, char* args[])
                     while (!correct_input_sex)
                     {
                         printf("\n\nIntrodueix el sexe de l'estudiant (1 per a noi, 0 per noia): ");
-                        correct_input_sex = scanf("%u%c", &value_sex, &endline) == 2 && endline == '\n' && (value_sex == 1 || value_sex == 0);  // Checks that the user did not input trash
+                        correct_input_sex = scanf("%u%c", &value_sex, &endline) == 2 && endline == '\n' && value_sex != '\n' && (value_sex == 1 || value_sex == 0);  // Checks that the user did not input trash
                         if (!correct_input_sex)
                         {
                             clean_stdin();
@@ -375,7 +344,8 @@ int main(int nargs, char* args[])
                         sortedAdd(list_marks, &value_mark, compareToDoubles);
                     }
 
-                    bool result = addStudent(manager.list, name, email, value_letter, value_DNI, *list_marks, value_sex);
+
+                    bool result = addStudent(manager.list, replaceSpaces(name, MAX_CHAR_IN_FIELDS), email, value_letter, value_DNI, *list_marks, value_sex);
                     if (!result)
                     {
                         printf("\n L'estudiant amb DNI %u no sha pogut afegir perque ja esta registrat", value_DNI);
@@ -405,7 +375,7 @@ int main(int nargs, char* args[])
 
                     if (result_find_DNI)
                     {
-                        printf("\nSha trobat a l'alumne %s amb el nom introduit. \n", ((Student *)(*found_DNI))->name);
+                        printf("\nSha trobat a l'alumne %s amb el nom introduit. \n", replaceUnderscores(((Student *)(*found_DNI))->name, MAX_CHAR_IN_FIELDS));
                         manager.lastStudent = *((Student *)(*found_DNI));
                     }
                     else
@@ -420,8 +390,15 @@ int main(int nargs, char* args[])
                     // check user input for name
                     printf("\n\nIntrodueix el nom de l'estudiant: ");
                     char name[100];
-                    while (scanf("%s", name) != 1) {}
+                    if (fgets(name, MAX_CHAR_IN_FIELDS, stdin) == NULL)
+                    {
+                        printf("\n\nERROR: No sha pogut guardar el nom");
+                    }
+                    // Remove trailing newline, if there.
+                    if ((strlen(name) > 0) && (name[strlen(name) - 1] == '\n'))
+                        name[strlen (name) - 1] = '\0';
 
+                    replaceSpaces(name, MAX_CHAR_IN_FIELDS);
 
                     void ** found_name;
                     unsigned int num_values_name;
@@ -431,10 +408,10 @@ int main(int nargs, char* args[])
                     bool result_find_name = find(*(manager.list), compareToStudentName, &temp_student, &found_name, &num_values_name);
 
                     if (result_find_name)
-                    {
+                    {;
                         if (num_values_name == 1)
                         {
-                            printf("\nSha trobat a l'alumne %s amb el DNI introduit. \n", ((Student *)(*found_name))->name);
+                            printf("\nSha trobat a l'alumne %s amb el DNI introduit. \n", replaceUnderscores(((Student *)(*found_name))->name, MAX_CHAR_IN_FIELDS));
                         }
                         else
                         {
@@ -456,7 +433,14 @@ int main(int nargs, char* args[])
                 }
                 case 5:
                 {
-                    delete(manager.list, compareToStudentDNI, &manager.lastStudent);
+                    if (manager.lastStudent.DNI == 0)
+                    {
+                        printf("No es pot eliminar perque no s'ha buscat cap alumne");
+                    }
+                    else
+                    {
+                        delete(manager.list, compareToStudentDNI, &manager.lastStudent);
+                    }
                     break;
                 }
                 case 6:
@@ -474,6 +458,28 @@ int main(int nargs, char* args[])
                         }
                     }
                     toScreenBackwards(*(manager.list), printStudent, value_print != 0);
+
+                    break;
+                }
+                case 7:
+                {
+                    bool correct_input_destroy = false;
+                    unsigned int value_destroy;
+                    while (!correct_input_destroy)
+                    {
+                        printf("\n\nIntrodueix 1 per destruir la llista i 0 per sortir: ");
+                        correct_input_destroy = scanf("%u%c", &value_destroy, &endline) == 2 && endline == '\n' && (value_destroy == 0 || value_destroy == 1);  // Checks that the user did not input trash
+                        if (!correct_input_destroy)
+                        {
+                            clean_stdin();
+                            printf("\nERROR: No has introduït la dada adequadament. Torna-ho a intentar...");
+                        }
+                    }
+                    if (value_destroy == 1)
+                    {
+                        destroy(manager.list);
+                        manager.list = create(sizeof(Student));
+                    }
 
                     break;
                 }
