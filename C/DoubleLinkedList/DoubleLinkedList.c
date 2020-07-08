@@ -405,11 +405,15 @@ unsigned int delete(DoubleLinkedList *list, int (*f)(void *, void *), void *elem
         {
             tmp = list->interest_point;
             list->interest_point = ptr;
+            ptr = ptr->next;
             pop(list);  // Reuse pop function
             list->interest_point = tmp;
             num_elements_found++;
         }
-        ptr = ptr->next;
+        else
+        {
+            ptr = ptr->next;
+        }
     }
     return num_elements_found;
 }
