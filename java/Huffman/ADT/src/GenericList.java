@@ -45,18 +45,19 @@ public class GenericList<T extends Comparable<T>> implements Iterable<T> {
             while (aux.getNext() != null)
             {
                 // If the next is matching
-                if (aux.getNext().getT().compareTo(t) == 0)
-                {
+                if (aux.getNext().getT().compareTo(t) == 0) {
                     elements_removed++;
                     // Delete it by skiping the node changing the pointer
                     aux.setNext(aux.getNext().getNext());
                     // To detect a null pointer if we are deleting the last element of the list
-                    if (aux.getNext().getNext() == null)
-                    {
+                    if (aux.getNext() == null) {
                         return elements_removed;
                     }
                 }
-                aux = aux.getNext();
+                else
+                {
+                    aux = aux.getNext();
+                }
             }
             return elements_removed;
         }
@@ -76,8 +77,22 @@ public class GenericList<T extends Comparable<T>> implements Iterable<T> {
         return aux.getT();
     }
 
+    public T search(T t)
+    {
+        Node<T> aux = this.first;
+        while (aux != null)
+        {
+            if (aux.getT().compareTo(t) == 0)
+            {
+                return aux.getT();
+            }
+            aux = aux.getNext();
+        }
+        return null;
+    }
+
     @Override
     public Iterator<T> iterator() {
-        return null;
+        return new GenericIterator<>(this.first);
     }
 }

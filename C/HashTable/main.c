@@ -116,14 +116,15 @@ hash_table * leer_hash(const char * nombre_archivo)
 
     FILE * fp = fopen(nombre_archivo, "r");
     int *len, *read;
+    *len = 0;
     printf("AAAAAAAAAAAAA");
     char * line = malloc(sizeof(char) * 1000);
 
-    getline(&line, &len, fp);
+    getline(&line, len, fp);
     int size = atoi(line);
 
     hash_table * table = new_hashtable(size, hash_multiplicacion);
-    while ((read = getline(&line, &len, fp)) != -1) {
+    while ((read = getline(&line, len, fp)) != -1) {
         printf("cosita");
         int key = atoi(strtok(line, " "));
         int value = atoi(strtok(line, " "));
@@ -156,7 +157,7 @@ int main(int argc, char *argv[])
 
     destroy_hashtable(table);
 
-  int *array, i, iloc, clave1, clave2,clave_x,valor_x;
+  int *array, i, iloc, clave1, clave2, clave_x, valor_x;
   hash_table *t;
 /*
   // Test primer ejercicio

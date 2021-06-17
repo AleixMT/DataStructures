@@ -18,6 +18,14 @@ Pila* crearPila()
 
 void apilar(int elem, Pila* P)
 {
+    Pila pila;
+    Pila *pila;
+    pila->num_elems = 0;
+
+    (*P).num_elems = 0;
+    P->num_elems = 0;
+
+
     if ((*P).num_elems < (*P).capacidad)
     {
         (*P).vector[(*P).num_elems] = elem;
