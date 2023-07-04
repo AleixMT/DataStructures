@@ -25,3 +25,5 @@ hs_err_pid*
 # diverse shit from intellij
 *.xml
 *.iml
+
+.idea
