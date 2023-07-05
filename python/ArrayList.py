@@ -4,6 +4,7 @@ from List import List
 from ArrayImpl import ArrayImpl
 import sys
 
+
 class ArrayList(List):
     def __init__(self):
         self.size = 5
@@ -65,8 +66,9 @@ class ArrayList(List):
             auxiliar_list.append(self.pop(minimum_index))
         self.extend(auxiliar_list)
 
-    def substract(self):
-        pass
+    def substract(self, elem_list):
+        for i in range(elem_list.length):
+            self.remove(elem_list.get(i))
 
     def append(self, elem):
         self.incrementElements()
@@ -80,37 +82,15 @@ class ArrayList(List):
             self.append(elem_list.get(i))
 
     def insertAfter(self, index, elem):
-        pass
-
-    # a = [ 1, 2, 3, 4, 5]
-    # a.insertAfter(2, 0)
-    # a = 2 [ 1, 2, 3, 0, 4, 5 ]
-
-    # a = [ 1, 2, 3, 4, 5 ]
-    # a.insertAfter(2, 0)
-    # a = [ 1, 2, 3, 4, 5, 0]
+        self.incrementElements()
+        for i in range(self.numElements - 2 - index):
+            self.set(self.numElements - 1 - i, self.get(self.numElements - 1 - i - 1))
+        self.set(index + 1, elem)
 
     def insertBefore(self, index, elem):
         self.append(elem)
         for i in range(index, self.numElements):
             self.swap(i, self.numElements - 1)
-
-
-    # a = [ 1, 2, 3, 4, 5]
-    # a.pop(1)
-    # a = 2 [ 1, 3, 4, 5 ]
-
-    # a = [ 1, 2, 3, 4, 5 ]
-    # a = [ 1, 3, 2, 4, 5 ]
-    # a = [ 1, 3, 4, 2, 5 ]
-    # a = [ 1, 3, 4, 5, 2 ]
-    # a = [ 1, 3, 4, 5 ] => return 2
-
-    # a = [ 1, 2, 3, 4, 5 ]
-    # a = [ 1, 3, 3, 4, 5 ]
-    # a = [ 1, 3, 4, 4, 5 ]
-    # a = [ 1, 3, 4, 5, 5 ]
-    # a = [ 1, 3, 4, 5 ] => return 2
 
     def pop(self, index):
         pop_object = self.get(index)
@@ -120,7 +100,9 @@ class ArrayList(List):
         return pop_object
 
     def remove(self, elem):
-        pass
+        for i in range(self.numElements):
+            if self.get(i) == elem:
+                self.pop(i)
 
     def incrementElements(self):
         self.numElements += 1

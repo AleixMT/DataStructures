@@ -5,12 +5,19 @@ from LinkedList import LinkedList
 from List import List
 
 if __name__ == '__main__':
-    a = ArrayList()
-    a.append("a")
-    a.append("b")
-    a.append("d")
-    a.append("c")
-    a.sort(List.compareTwoLetters)
+    a = LinkedList()
+    a.append(4)
+    a.append(3)
+    a.append(2)
+    a.append(1)
+    a.insertAfter(3, 8)
+
+    aux = a.first
+    while aux.getNextNode() is not None:
+        aux = aux.getNextNode()
+
+    aux.setNextNode(a.first)
+
     a.printList()
 
 

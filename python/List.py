@@ -77,7 +77,7 @@ class List(ABC):
 
     # Recieves list of elements and removes them from the current list
     @abstractmethod
-    def substract(self):
+    def substract(self, elem_list):
         pass
 
     # Inserts elem in the given index position
@@ -145,3 +145,33 @@ class List(ABC):
                 return -1
             else:
                 return 1
+
+
+    # a = [ 1, 2, 3, 4, 5]
+    # a.pop(1)
+    # a = 2 [ 1, 3, 4, 5 ]
+
+    # a = [ 1, 2, 3, 4, 5 ]
+    # a = [ 1, 3, 2, 4, 5 ]
+    # a = [ 1, 3, 4, 2, 5 ]
+    # a = [ 1, 3, 4, 5, 2 ]
+    # a = [ 1, 3, 4, 5 ] => return 2
+
+    # a = [ 1, 2, 3, 4, 5 ]
+    # a = [ 1, 3, 3, 4, 5 ]
+    # a = [ 1, 3, 4, 4, 5 ]
+    # a = [ 1, 3, 4, 5, 5 ]
+    # a = [ 1, 3, 4, 5 ] => return 2
+
+
+    # a = [ 1, 2, 3, 4, 5]
+    # a.insertAfter(2, 0)
+    # a = 2 [ 1, 2, 3, 0, 4, 5 ]
+
+    # a = [ 1, 2, 3, 4, 5 ]
+    # a.insertAfter(2, 0)
+    # a = [ 1, 2, 3, 4, 5, 0]
+
+    # (0)->(1)->(2)->(3)->(4)
+    # first -> (0)
+    # get(0) -> 0

@@ -9,10 +9,6 @@ class LinkedList(List):
         self.first = None
         self.numElements = 0
 
-    # (0)->(1)->(2)->(3)->(4)
-    # first -> (0)
-    # get(0) -> 0
-
     def get(self, index):
         if self.numElements == 0:
             raise IndexError
@@ -71,6 +67,12 @@ class LinkedList(List):
     def appendToBeginning(self, elem):
         pass
 
+    def minimumPos(self, compare_two):
+        pass
+
+    def minimum(self, compare_two):
+        pass
+
     def extend(self, elem_list):
         pass
 
@@ -81,7 +83,13 @@ class LinkedList(List):
         pass
 
     def insertAfter(self, index, elem):
-        pass
+        aux = self.first
+        for i in range(index):
+            aux = aux.getNextNode()
+
+        node = Node(elem, None)
+        node.setNextNode(aux.getNextNode())
+        aux.setNextNode(node)
 
     def pop(self, index):
         pass
@@ -91,4 +99,3 @@ class LinkedList(List):
 
     def incrementElements(self):
         self.numElements += 1
-
