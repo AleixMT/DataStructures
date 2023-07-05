@@ -32,7 +32,7 @@ class LinkedList(List):
     def set(self, index, value):
         pass
 
-    def size(self):
+    def length(self):
         pass
 
     def printList(self):
@@ -55,7 +55,7 @@ class LinkedList(List):
     def search(self, elem):
         pass
 
-    def sort(self):
+    def sort(self, comparator_function):
         pass
 
     def append(self, elem):

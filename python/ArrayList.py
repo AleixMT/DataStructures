@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from List import List
 from ArrayImpl import ArrayImpl
-
+import sys
 
 class ArrayList(List):
     def __init__(self):
@@ -20,7 +20,7 @@ class ArrayList(List):
             raise IndexError
         return self.array.set(index, value)
 
-    def size(self):
+    def length(self):
         return self.numElements
 
     def printList(self):
@@ -42,7 +42,30 @@ class ArrayList(List):
                 return True
         return False
 
-    def sort(self):
+    def minimum(self, compare_two):
+        minimum = sys.maxsize
+        for i in range(self.numElements):
+            if compare_two(self.get(i), minimum) >= 1:
+                minimum = self.get(i)
+        return minimum
+
+    def minimumPos(self, compare_two):
+        index = 0
+        minimum = self.get(index)
+        for i in range(1, self.numElements):
+            if compare_two(self.get(i), minimum) >= 1:
+                minimum = self.get(i)
+                index = i
+        return index
+
+    def sort(self, compare_two):
+        auxiliar_list = ArrayList()
+        for i in range(self.numElements):
+            minimum_index = self.minimumPos(compare_two)
+            auxiliar_list.append(self.pop(minimum_index))
+        self.extend(auxiliar_list)
+
+    def substract(self):
         pass
 
     def append(self, elem):
@@ -53,7 +76,7 @@ class ArrayList(List):
         self.insertBefore(0, elem)
 
     def extend(self, elem_list):
-        for i in range(elem_list.size()):
+        for i in range(elem_list.length()):
             self.append(elem_list.get(i))
 
     def insertAfter(self, index, elem):
