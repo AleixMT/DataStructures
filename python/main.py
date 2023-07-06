@@ -10,13 +10,15 @@ if __name__ == '__main__':
     a.append(3)
     a.append(2)
     a.append(1)
-    a.insertAfter(3, 8)
+    a.append(1)
+    a.append(1)
+    a.append(1)
+    a.append(5)
 
-    aux = a.first
-    while aux.getNextNode() is not None:
-        aux = aux.getNextNode()
-
-    aux.setNextNode(a.first)
+    b = LinkedList()
+    b.append(4)
+    b.append(1)
+    a.substract(b)
 
     a.printList()
 

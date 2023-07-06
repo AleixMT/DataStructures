@@ -25,11 +25,27 @@ class LinkedList(List):
                 if current_node is None:
                     break
 
+    def getNode(self, index):
+        if self.numElements == 0:
+            raise IndexError
+        if index == 0:
+            return self.first
+        else:
+            current_node = self.first
+            c = 0
+            while True:
+                if c == index:
+                    return current_node
+                c += 1
+                current_node = current_node.getNextNode()
+                if current_node is None:
+                    break
+
     def set(self, index, value):
         pass
 
     def length(self):
-        pass
+        return self.numElements
 
     def printList(self):
         if self.numElements == 0:
@@ -76,8 +92,14 @@ class LinkedList(List):
     def extend(self, elem_list):
         pass
 
-    def substract(self):
-        pass
+    def substract(self, elem_list):
+        for i in range(elem_list.length()):
+            j = 0
+            while j < self.numElements:
+                if self.get(j) == elem_list.get(i):
+                    self.pop(j)
+                else:
+                    j += 1
 
     def insertBefore(self, index, elem):
         pass
@@ -92,10 +114,20 @@ class LinkedList(List):
         aux.setNextNode(node)
 
     def pop(self, index):
-        pass
+        if index >= self.numElements:
+            raise IndexError
+        if index == 0:
+            temp = self.get(index)
+            self.first = self.getNode(index).getNextNode()
+            return temp
+        pop_object = self.get(index)
+        self.getNode(index - 1).setNextNode(self.getNode(index + 1))
+        return pop_object
 
     def remove(self, elem):
-        pass
+        for i in range(self.numElements):
+            if self.get(i) == elem:
+                self.pop(i)
 
     def incrementElements(self):
         self.numElements += 1
